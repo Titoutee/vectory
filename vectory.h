@@ -1,24 +1,31 @@
 #ifndef VEC_H
 #define VEC_H
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#define CAP_DEF 5
+#define VEC_SUCCESS 0
+#define VEC_FAILURE -1
+
+/// Should be used default capacity
+#define CAP_DEF 1
 
 typedef struct Vec {
   size_t len;
   size_t capacity;
-
+  size_t elt_size;
   void *data; // Generic
 } Vec;
 
-const Vec VEC_VOID = {.len = 0, .capacity = 0, .data = NULL};
+
+const Vec VEC_VOID = {.len = 0, .capacity = 0, .elt_size = 0, .data = NULL}; 
 
 // Mutating operations
-void push_end(Vec *vec, void *val);
+void _realloc(Vec *vec);
+int push_end(Vec *vec, void *val);
 void push_front(Vec *vec, void *val);
-void *pop_end(Vec *vec);
+void pop_end(Vec *vec, void *buffer);
 void *pop_front(Vec *vec);
 void assign(Vec *vec);
 void insert(Vec *vec, void *val, size_t idx);
@@ -27,9 +34,10 @@ void insert(Vec *vec, void *val, size_t idx);
 size_t len(Vec *vec);
 size_t capacity(Vec *vec);
 char is_initialised(Vec *vec);
+char _valid_capacity(Vec *vec);
 
 // Building
-void init(Vec *vec, size_t capacity); // Overrides the initializer constant
+char init(Vec *vec, size_t capacity, size_t elt_size); // Overrides the initializer constant
 
 // Side-building
 void from_array(Vec *vec, void *arr);
