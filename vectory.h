@@ -22,12 +22,13 @@ extern const Vec VEC_VOID;
 // Mutating operations
 int push_end(Vec *vec, void *val);
 void push_front(Vec *vec, void *val);
-void pop_end(Vec *vec, void *buffer, size_t n);
+void *pop_end(Vec *vec);
 void *pop_front(Vec *vec);
 void assign(Vec *vec);
 void insert(Vec *vec, void *val, size_t idx);
 
 // Infos
+void *vec_at(Vec *vec, size_t idx);
 size_t len(Vec *vec);
 size_t capacity(Vec *vec);
 char is_initialised(Vec *vec);
@@ -44,6 +45,9 @@ void from_bytes(Vec *vec, char arr[]);
 void deep_copy(Vec *vec, Vec *other);
 
 void *__vec_offset(Vec *vec, size_t idx);
+void *__vec_offset_c(Vec *vec, size_t idx);
 void __vec_assign(Vec *vec, size_t idx, void *element);
 void __realloc(Vec *vec);
+void __realloc_cust(Vec *vec, size_t cust);
+void __off_all(Vec *vec, size_t off);
 #endif // VEC_H
