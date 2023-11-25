@@ -19,6 +19,7 @@ typedef struct Vec {
 } Vec;
 
 extern const Vec VEC_VOID;
+
 // Mutating operations
 int push_end(Vec *vec, void *val);
 void push_front(Vec *vec, void *val);
@@ -26,9 +27,10 @@ void *pop_end(Vec *vec);
 void *pop_front(Vec *vec);
 void assign(Vec *vec);
 void insert(Vec *vec, void *val, size_t idx);
+void shrink_to_fit(Vec *vec);
 
 // Infos
-void *vec_at(Vec *vec, size_t idx);
+void *at(Vec *vec, size_t idx);
 size_t len(Vec *vec);
 size_t capacity(Vec *vec);
 char is_initialised(Vec *vec);

@@ -1,18 +1,21 @@
-#include "vectory.h"
-#include "memory.h"
-#include "stdio.h"
+#include <memory.h>
+#include <stdio.h>
 #include <assert.h>
-#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "vectory.h"
 
 const Vec VEC_VOID = {.len = 0, .capacity = 0, .elt_size = 0, .data = NULL};
 
 // Returns a reference to the `idx` th element of the vector.
-// It should be cast to the appropriate pointer type, else UB if used with flawed pointer type.
-// User-friendly wrapper around `__vec_offset_c`.
-void *vec_at(Vec *vec, size_t idx) {
-  return __vec_offset_c(vec, idx);
+// It should be cast to the appropriate pointer type, else UB if used with
+// flawed pointer type. User-friendly wrapper around `__vec_offset_c`.
+void *at(Vec *vec, size_t idx) { return __vec_offset_c(vec, idx); }
+
+void shrink_to_fit(Vec *vec) {
+  vec->capacity = vec->len;
+  void *crap = realloc(vec->data, (unsigned long) vec->capacity); //Nomally, is not supposed to move. Serves to free some memory.
 }
 
 // Pushes a new element to the end of the inner array.
@@ -38,7 +41,7 @@ void push_front(Vec *vec, void *val);
 // Pops the last element of the inner array.
 // Returns a `void *` to the popped element.
 void *pop_end(Vec *vec) {
-  void *last = __vec_offset_c(vec, vec->len-1);
+  void *last = __vec_offset_c(vec, vec->len - 1);
   vec->len--;
   return last; // The caller should cast, respective to elt_size (same as
                // allocation functions such as malloc)
@@ -106,9 +109,10 @@ void *__vec_offset(Vec *vec, size_t idx) {
 // returned.
 // For vector indexing, use the `vec_at` wrapper.
 void *__vec_offset_c(Vec *vec, size_t idx) {
-  return (idx >= vec->len) ? vec->data
-                           : __vec_offset(vec, idx); // Safe call to `__vec_offset`
-                           // The actual call is never dangerous, the export of the returned address is.
+  return (idx >= vec->len)
+             ? vec->data
+             : __vec_offset(vec, idx); // Safe call to `__vec_offset`
+  // The actual call is never dangerous, the export of the returned address is.
 }
 
 // Assign the `idx` th element of the inner array.

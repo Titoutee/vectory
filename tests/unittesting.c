@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
   // Format testing
   format(&vec);
-
+  
   // Push to end testing
   int val = 2;
   if (push_end(&vec, (int *)&val) == VEC_FAILURE) {
@@ -26,7 +26,18 @@ int main(int argc, char *argv[]) {
   }
 
   format(&vec);
-  int *elt = vec_at(&vec, 0);
-  printf("%d\n", *elt);
+  push_end(&vec, &val);
+  push_end(&vec, &val);
+  format(&vec);
+  int *elt = at(&vec, 0);
+  assert(*elt == (int)2);
+  
+  shrink_to_fit(&vec);
+
+  
+
+  format(&vec);
+
+
   return 0;
 }
